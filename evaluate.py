@@ -6,7 +6,8 @@ import numpy
 #
 # 必须参数
 # houseList    (numpy.array): 房源经纬度, 为nx2矩阵
-# utilityList  (numpy.array): 相关设施经纬度，为mx2矩阵
+# utilityList  (numpy.array): 相关设施经纬度，为mx3矩阵,
+#                             前两列为经纬度，最后一列为评分
 #
 # 可选参数
 # FindingRadio (float)      : 查找半径(单位：千米)，默认为20
@@ -17,15 +18,16 @@ import numpy
 def evaluate(houseList, utilityList, FindingRadio = 20):
 
   # 返回一栋房屋的评分
+  # 评分 = 求和（范围内每个设施的评分 / 房屋到该设施的距离）
   def evaluateOneHouse(longitude, latitude, utilityList, FindingRadio = 20):
     result = 0
-    SCORE_PER_UTILITY = 10
     for uti in utilityList :
-      if getDistance(
+      distance = getDistance(
           longitude, latitude, 
           uti[0], uti[1]
-        ) <= FindingRadio :
-        result += SCORE_PER_UTILITY
+        )
+      if distance <= FindingRadio :
+        result += uti[2] / distance
     return result
 
   # 计算距离
