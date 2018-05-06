@@ -58,6 +58,7 @@ def evaluate(houseList, utilityList, FindingRadio = 20):
     result.append(evaluateOneHouse(
       house[0], 
       house[1], 
-      utilityList
+      utilityList,
+      FindingRadio
     ))
   return numpy.array(result)
