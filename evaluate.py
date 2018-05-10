@@ -21,14 +21,18 @@ def evaluate(houseList, utilityList, FindingRadio = 20):
   # 评分 = 求和（范围内每个设施的评分 / 房屋到该设施的距离）
   def evaluateOneHouse(longitude, latitude, utilityList, FindingRadio = 20):
     result = 0
+    distSum = 0
     for uti in utilityList :
       distance = getDistance(
           longitude, latitude, 
           uti[0], uti[1]
         )
+      if distance < 0.01:
+        distance = 0.01
+      distSum += distance
       if distance <= FindingRadio :
         result += uti[2] / distance
-    return result
+    return result, distSum / utilityList.shape[0]
 
   # 计算距离
   # 算法来源：https://blog.csdn.net/u013401853/article/details/73368850
@@ -54,11 +58,19 @@ def evaluate(houseList, utilityList, FindingRadio = 20):
     return distance
 
   result = []
+  dist = 0
+  count = 0
   for house in houseList:
-    result.append(evaluateOneHouse(
+    score, _dist = evaluateOneHouse(
       house[0], 
       house[1], 
       utilityList,
       FindingRadio
-    ))
+    )
+    count = count + 1
+    if count % 1000 == 0 :
+      print('已评价{0}套房屋'.format(count))
+    result.append(score)
+    dist += _dist
+  print('平均长度:{0}'.format(dist / houseList.shape[0]))
   return numpy.array(result)
