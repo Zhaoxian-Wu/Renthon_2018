@@ -23,13 +23,16 @@ houseList = pandas.read_csv('data/house.csv', delimiter=',', skiprows=0).as_matr
 # 居中比重
 C = 0.8
 # 溢出概率
-p = 0.2
+p = 0.3
 # 平均值
-mu = 60
+mu = 500
+# 方差
+std = getStd(mu, C, p)
+
 scoreList = []
 for i in range(0, len(DataList)):
   score = evaluate(houseList, DataList[i], FindingRadioList[i])
-  score = normalize(score, mu, getStd(mu, C, p))
+  score = normalize(score, mu, std)
   scoreList.append(score)
 
 # 评分矩阵
@@ -37,6 +40,7 @@ A = numpy.vstack(scoreList)
 A = numpy.transpose(A)
 # 房价
 b = houseList[:, 2]
+b = normalize(b, mu * A.shape[1], std)
 
 newDir = 'result/' + time.strftime('%m-%d-%H-%M', time.localtime())
 os.mkdir(time.strftime(newDir))
@@ -48,8 +52,9 @@ pandas.DataFrame(columns=['b'], data=b).to_csv(newDir + '/b.csv', columns=['b'],
 # 权重
 x = numpy.linalg.pinv(A).dot(b)
 columns = ['weight']
-pandas.DataFrame(columns=columns, data=x).to_csv(newDir + '/result.csv', columns=columns, index=False)
+pandas.DataFrame(columns=columns, data=x).to_csv(newDir + '/x.csv', columns=columns, index=False)
 
 # 误差
 err = A.dot(x) - b
 reer = numpy.linalg.norm(err) / numpy.linalg.norm(b) 
+print('相对误差：{0}'.format(reer))
