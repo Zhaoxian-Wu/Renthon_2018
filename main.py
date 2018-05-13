@@ -10,20 +10,26 @@ DataList = [
   pandas.read_csv('data/utility/医疗.csv', delimiter=',', skiprows=0).as_matrix(),
   pandas.read_csv('data/utility/娱乐.csv', delimiter=',', skiprows=0).as_matrix(),
   pandas.read_csv('data/utility/安全.csv', delimiter=',', skiprows=0).as_matrix(),
-  pandas.read_csv('data/utility/教育.csv', delimiter=',', skiprows=0).as_matrix()
+  pandas.read_csv('data/utility/教育.csv', delimiter=',', skiprows=0).as_matrix(),
+  pandas.read_csv('data/utility/交通.csv', delimiter=',', skiprows=0).as_matrix()
 ]
 FindingRadioList = [
   10.62,
   11.25,
   10.53,
-  10.99
+  10.99,
+  15
 ]
 houseList = pandas.read_csv('data/house.csv', delimiter=',', skiprows=0).as_matrix()
 
 # 居中比重
-C = 0.8
+C = 0.6
 # 溢出概率
-p = 0.3
+p = 0.1
+# # 居中比重
+# C = 0.8
+# # 溢出概率
+# p = 0.3
 # 平均值
 mu = 500
 # 方差
@@ -44,7 +50,7 @@ b = normalize(b, mu * A.shape[1], std)
 
 newDir = 'result/' + time.strftime('%m-%d-%H-%M', time.localtime())
 os.mkdir(time.strftime(newDir))
-columns = ['医疗', '娱乐', '安全', '教育']
+columns = ['医疗', '娱乐', '安全', '教育', '交通']
 pandas.DataFrame(columns=columns, data=A).to_csv(newDir + '/A.csv', columns=columns, index=False)
 pandas.DataFrame(columns=['findingRadio'], data=FindingRadioList).to_csv(newDir + '/findingRadio.csv', columns=['findingRadio'], index=False)
 pandas.DataFrame(columns=['b'], data=b).to_csv(newDir + '/b.csv', columns=['b'], index=False)
