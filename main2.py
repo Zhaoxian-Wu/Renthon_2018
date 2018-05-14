@@ -22,23 +22,11 @@ FindingRadioList = [
 ]
 houseList = pandas.read_csv('data/house.csv', delimiter=',', skiprows=0).as_matrix()
 
-# 居中比重
-C = 0.6
-# 溢出概率
-p = 0.1
-# # 居中比重
-# C = 0.8
-# # 溢出概率
-# p = 0.3
-# 平均值
 mu = 500
-# 方差
-std = getStd(mu, C, p)
 
 scoreList = []
 for i in range(0, len(DataList)):
   score = evaluate(houseList, DataList[i], FindingRadioList[i])
-  score = normalize(score, mu, std)
   score *= mu / numpy.mean(score)
   scoreList.append(score)
 
@@ -47,7 +35,7 @@ A = numpy.vstack(scoreList)
 A = numpy.transpose(A)
 # 房价
 b = houseList[:, 2]
-b = normalize(b, mu * A.shape[1], std)
+b *= 4 * mu / numpy.mean(b)
 
 newDir = 'result/' + time.strftime('%m-%d-%H-%M', time.localtime())
 os.mkdir(time.strftime(newDir))
