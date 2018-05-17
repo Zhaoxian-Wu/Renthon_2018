@@ -23,13 +23,10 @@ FindingRadioList = [
 houseList = pandas.read_csv('data/house.csv', delimiter=',', skiprows=0).as_matrix()
 
 # 居中比重
-C = 0.6
+C = 0.4
 # 溢出概率
 p = 0.1
-# # 居中比重
-# C = 0.8
-# # 溢出概率
-# p = 0.3
+
 # 平均值
 mu = 500
 # 方差
@@ -39,7 +36,6 @@ scoreList = []
 for i in range(0, len(DataList)):
   score = evaluate(houseList, DataList[i], FindingRadioList[i])
   score = normalize(score, mu, std)
-  score *= mu / numpy.mean(score)
   scoreList.append(score)
 
 # 评分矩阵
@@ -50,7 +46,8 @@ b = houseList[:, 2]
 b = normalize(b, mu * A.shape[1], std)
 
 newDir = 'result/' + time.strftime('%m-%d-%H-%M', time.localtime())
-os.mkdir(time.strftime(newDir))
+os.mkdir(newDir)
+print('结果位置：' + newDir)
 columns = ['医疗', '娱乐', '安全', '教育', '交通']
 pandas.DataFrame(columns=columns, data=A).to_csv(newDir + '/A.csv', columns=columns, index=False)
 pandas.DataFrame(columns=['findingRadio'], data=FindingRadioList).to_csv(newDir + '/findingRadio.csv', columns=['findingRadio'], index=False)
