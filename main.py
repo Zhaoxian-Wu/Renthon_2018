@@ -62,3 +62,14 @@ pandas.DataFrame(columns=columns, data=x).to_csv(newDir + '/x.csv', columns=colu
 err = A.dot(x) - b
 reer = numpy.linalg.norm(err) / numpy.linalg.norm(b) 
 print('相对误差：{0}'.format(reer))
+
+# 相关性分析
+_A = A
+for i in range(A.shape[1]):
+  _A[:,i] = A[:,i] / numpy.linalg.norm(A[:,i])
+
+R = _A.transpose().dot(_A)
+print(R)
+
+columns = ['医疗', '娱乐', '安全', '教育', '交通']
+pandas.DataFrame(columns=columns, data=R).to_csv(newDir + '/Relativity.csv', columns=columns, index=False)
