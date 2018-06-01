@@ -68,8 +68,8 @@ def evaluate(houseList, utilityList, FindingRadio = 20):
       FindingRadio
     )
     count = count + 1
-    if count % 1000 == 0 :
-      print('已评价{0}套房屋'.format(count))
+    # if count % 1000 == 0 :
+    #   print('已评价{0}套房屋'.format(count))
     result.append(score)
     dist += _dist
   print('平均长度:{0}'.format(dist / houseList.shape[0]))
